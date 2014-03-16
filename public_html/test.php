@@ -4,11 +4,11 @@
  *
  * To use this parser functions need to be declared like so:
  *
- * function test($args = []) { extract(get_args($args,[
- * 'foo' => 'default string',
- * 'bar' => 12345,
- * 'baz' => true
- * ]));
+ * function method($args = []) { extract(get_args($args,[
+ * 		'foo' => 'default string',
+ * 		'bar' => 12345,
+ * 		'baz' => true
+ * 	]));
  * 
  * @param  array $args     Argument list passed to function.
  * @param  array $defaults Default values for arguments.
