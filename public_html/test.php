@@ -72,12 +72,13 @@ function get_args($args, $defaults)
 				"Invalid value for '$val' in $f", 
 			E_USER_ERROR);			
 		}
+		if (is_numeric($key)) {
+			$key = $val;
+		}
+
 		/* If an argument is supplied, use it. */
 		if (isset($args[$key])) {
-			if (is_numeric($key))
-				$params[$val] = $args[$val];
-			else
-				$params[$key] = $args[$key];
+			$params[$key] = $args[$key];
 		} else {
 			$params[$key] = $defaults[$key];
 		}
@@ -88,11 +89,9 @@ function get_args($args, $defaults)
 class Param {
 	public function test($args = []) 
 	{ 
-		extract(get_args($args,[
-			'foo' => 'bananas',
-			'bar',
-			'baz' => 'bananas'
-		]));
+		extract(get_args($args,['foo' => 'bananas',
+					'bar',
+					'baz' => 'bananas']));
 		
 		$this->function_using($foo, $bar, $baz);
 	}
@@ -104,12 +103,7 @@ class Param {
 	}
 }
 
-/*
-<method type> (<return type>) <method name>: 
-(<argument type>) <argument name> <argument 2 label>: 
-(<argument 2 type>) <argument 2 name>;
-*/
-
 $param = new Param();
 
-$param->test(['foo' => 'bar']);
+$param->test(['foo' => 'fubar',
+	      'bar' => 'moot']);
