@@ -16,6 +16,7 @@
  */
 function get_args($args, $defaults)
 {
+	/*  Are we supplying more arguments than needed?  */
 	if (count($args) > count($defaults)) {
 		$argsc = count($args);
 		$defaultsc = count($defaults);
@@ -30,8 +31,19 @@ function get_args($args, $defaults)
 			"saw $argsc, expected $defaultsc", 
 		E_USER_ERROR);
 	}
+
+	/*  Get the parameter names.  */
+	$dparams = [];
+	foreach($defaults as $key => $val) {
+		if (is_numeric($key))
+			$dparams[] = $val;
+		else 
+			$dparams[] = $key;
+	}
+
+	/*  Does the parameter for the given argument even exist?  */
 	foreach ($args as $key => $val) {
-		if (!in_array($key, array_keys($defaults))) {
+		if (!in_array($key, $dparams)) {
 			$t = debug_backtrace();
 			$f = "'{$t[1]['function']}'";
 			if (isset($t[1]['class']))
@@ -43,9 +55,13 @@ function get_args($args, $defaults)
 			E_USER_ERROR);
 		}
 	}
+
+	/*  Splice in default values if no parameter value passed.  */
 	$params = [];
 	foreach ($defaults as $key => $val) {
-		if ($val == 'REQUIRED' && !isset($args[$key])) {
+		/* If there's no default value, 
+		   it's a required parameter. */
+		if (is_numeric($key) && !isset($args[$val])) {
 			$t = debug_backtrace();
 			$f = "'{$t[1]['function']}'";
 			if (isset($t[1]['class']))
@@ -53,11 +69,15 @@ function get_args($args, $defaults)
 			else 
 				$f = "function $f";
 			trigger_error(
-				"Invalid value for '$key' in $f", 
+				"Invalid value for '$val' in $f", 
 			E_USER_ERROR);			
 		}
+		/* If an argument is supplied, use it. */
 		if (isset($args[$key])) {
-			$params[$key] = $args[$key];
+			if (is_numeric($key))
+				$params[$val] = $args[$val];
+			else
+				$params[$key] = $args[$key];
 		} else {
 			$params[$key] = $defaults[$key];
 		}
@@ -67,10 +87,9 @@ function get_args($args, $defaults)
 
 class Param {
 	public function test($args = []) { extract(get_args($args,[
-		'foo' => 'bananas',
-		'bar' => 'REQUIRED',
-		'baz' => 'bananas'
-	]));
+				'foo' => 'bananas',
+				'bar',
+				'baz' => 'bananas']));
 		$this->function_using($foo, $bar, $baz);
 	}
 
@@ -81,6 +100,11 @@ class Param {
 	}
 }
 
+/*
+<method type> (<return type>) <method name>: 
+(<argument type>) <argument name> <argument 2 label>: 
+(<argument 2 type>) <argument 2 name>;
+*/
 
 $param = new Param();
 
