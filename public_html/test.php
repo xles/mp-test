@@ -68,7 +68,7 @@ function get_args($args, $defaults)
 class Param {
 	public function test($args = []) { extract(get_args($args,[
 	'foo' => 'bananas',
-	'bar' => 'bananas',
+	'bar' => 'REQUIRED',
 	'baz' => 'bananas'
 	]));
 		$this->function_using($foo, $bar, $baz);
