@@ -1,10 +1,10 @@
 <?php
+namespace MyOrg\Application;
 require_once('../mp/mp.php');
 
-echo $path;
-
-$configure = [
-	'appPath' => '',
+$config->paths = [
+	'appPath' => dirname(__FILE__).'/../application',
 	'mpPath' => '',
-	'appPath' => '',
 ];
+
+$mp->run();

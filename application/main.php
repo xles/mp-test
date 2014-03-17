@@ -1,12 +1,9 @@
 <?php
-
 namespace MyOrg\Application;
 
-use MagicPotion;
+use MagicPotion\Router;
 
-import('mp.core');
-
-class Main extends Application {
-
+function main()
+{
+	echo 'Hello World!';
 }
-

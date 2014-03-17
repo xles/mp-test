@@ -14,10 +14,12 @@ var_dump(get_included_files());
 
 */
 
-namespace Foo;
+//namespace Foo;
 
-$Foo\bar = 'fubar';
+function bar() {
+	echo 'foo';
+}
 
 namespace Bananas;
 
-echo $bar;
+\bar();
